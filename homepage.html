@@ -1,0 +1,35 @@
+<html ng-app="myApp" ng-controller="MainCtrl">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Initcwnd checker</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+</head>
+<body>
+	<input type="text" ng-model='url'  />
+	<button ng-click="runtest()"> Runtest</button>
+
+	<ul>
+		<li>Packet count: {{result.PktCount}}</li>
+		<li>Payload size: {{result.PayloadSize}}</li>
+		<li>Error: {{result.Err}}</li>
+	</ul>
+	<pre>{{result.PayloadHexDump}} </pre>
+<script>
+angular.module('myApp',[ ])
+
+
+function MainCtrl($scope, $http, $timeout  ){
+
+	$scope.runtest = function(){
+		var url = "/runtest?url=" + escape($scope.url)
+		console.log(url)
+		$scope.result = null
+		$http.get(url).success(function(data){
+			$scope.result = data
+		})
+	}
+}
+
+</script>
+</body>
+</html>
