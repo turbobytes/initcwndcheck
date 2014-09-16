@@ -17,6 +17,7 @@ type Result struct {
 	PktCount, PayloadSize int
 	PayloadHexDump        string
 	Err                   string
+	Ip                    string
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -77,9 +78,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 	pkt_count, payload_size, fullpayload, err := initcwndcheck.Detectinitcwnd(hostname, path, dstip)
 	if err != nil {
-		serve(w, r, &Result{pkt_count, payload_size, hex.Dump(fullpayload), err.Error()})
+		serve(w, r, &Result{pkt_count, payload_size, hex.Dump(fullpayload), err.Error(), dstip.String()})
 	} else {
-		serve(w, r, &Result{pkt_count, payload_size, hex.Dump(fullpayload), ""})
+		serve(w, r, &Result{pkt_count, payload_size, hex.Dump(fullpayload), "", dstip.String()})
 	}
 
 }
