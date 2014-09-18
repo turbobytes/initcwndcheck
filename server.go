@@ -10,14 +10,15 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 )
 
 type Result struct {
-	PktCount, PayloadSize int
-	PayloadHexDump        string
-	Err                   string
-	Ip                    string
+	PktCount, PayloadSize, TotalPayloadSize int
+	PayloadHexDump                          string
+	Err                                     string
+	Ip                                      string
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -34,6 +35,13 @@ func serve(w http.ResponseWriter, r *http.Request, res *Result) {
 		w.Header().Set("Content-Type", "application/javascript")
 		fmt.Fprintf(w, "%s && %s (%s)", cb, cb, b)
 	}
+}
+
+func getfullbodysize(c chan int, req *http.Request) {
+	tr := &http.Transport{}
+	res, _ := tr.RoundTrip(req)
+	b, _ := httputil.DumpResponse(res, true)
+	c <- len(b)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -76,11 +84,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		serve(w, r, &Result{Err: "ip error"})
 		return
 	}
+	c_fullpayload := make(chan int)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("http://%s%s", dstip.String(), path), nil)
+	req.Host = hostname
+	go getfullbodysize(c_fullpayload, req)
 	pkt_count, payload_size, fullpayload, err := initcwndcheck.Detectinitcwnd(hostname, path, dstip)
+	fullpayloadsize := <-c_fullpayload
 	if err != nil {
-		serve(w, r, &Result{pkt_count, payload_size, hex.Dump(fullpayload), err.Error(), dstip.String()})
+		serve(w, r, &Result{pkt_count, payload_size, fullpayloadsize, hex.Dump(fullpayload), err.Error(), dstip.String()})
 	} else {
-		serve(w, r, &Result{pkt_count, payload_size, hex.Dump(fullpayload), "", dstip.String()})
+		serve(w, r, &Result{pkt_count, payload_size, fullpayloadsize, hex.Dump(fullpayload), "", dstip.String()})
 	}
 
 }

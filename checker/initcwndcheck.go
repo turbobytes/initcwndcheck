@@ -103,8 +103,8 @@ func getack(conn net.PacketConn, srcport layers.TCPPort, dstip string) (ack uint
 					} else {
 						err = errors.New("Port is CLOSED")
 					}
+					return
 				}
-				return
 			}
 		} else {
 			err = errors.New("Got packet not matching addr")
