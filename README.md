@@ -11,6 +11,7 @@ Usage
 -----
 
 ```
+go get github.com/turbobytes/initcwndcheck
 go build github.com/turbobytes/initcwndcheck
 wget -O homepage.html https://github.com/turbobytes/initcwndcheck/raw/master/homepage.html
 sudo ./initcwndcheck
