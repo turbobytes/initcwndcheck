@@ -7,6 +7,8 @@ What this basically does is: make a tcp connection and send a GET request. From 
 
 Read more about initial congestion windows : http://www.cdnplanet.com/blog/tune-tcp-initcwnd-for-optimum-performance/
 
+Run the test online: http://www.cdnplanet.com/tools/initcwndcheck/
+
 Usage
 -----
 
