@@ -57,6 +57,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := u.Path
+	if path == "" {
+		path = "/"
+	}
 	if u.RawQuery != "" {
 		path = fmt.Sprintf("%s?%s", u.Path, u.RawQuery)
 	}
