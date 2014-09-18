@@ -113,6 +113,8 @@ func getack(conn net.PacketConn, srcport layers.TCPPort, dstip string) (ack uint
 	return
 }
 
+//Detectinitcwnd attempts to detect the initial congession window of an http endpoint.
+//First does a 3 way tcp handshake, sends GET request and then does not ack any response while measuring the packets received. This allows us to see how much data the server can send without acknowledgement.
 func Detectinitcwnd(host, url string, dstip net.IP) (pkt_count, payload_size int, fullpayload []byte, err error) {
 	pldata := []byte(fmt.Sprintf("GET %s HTTP/1.1\r\nHost: %s\r\n\r\n", url, host))
 	var dstport layers.TCPPort
