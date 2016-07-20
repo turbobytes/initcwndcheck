@@ -3,8 +3,8 @@ package initcwndcheck
 //Originally stollen from https://github.com/kdar/gorawtcpsyn/blob/master/main.go
 import (
 	"bytes"
-	"code.google.com/p/gopacket"
-	"code.google.com/p/gopacket/layers"
+	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 	"errors"
 	"fmt"
 	"log"
